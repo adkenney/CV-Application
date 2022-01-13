@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import uniqid from "uniqid";
 import EducationDisplay from "./EducationDisplay";
 import Typography from "@mui/material/Typography";
@@ -6,187 +6,144 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
-import { withStyles } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 
-const useStyles = (theme) => ({
+const useStyles = makeStyles({
   hidden: {
     display: "none",
   },
 });
 
-class Education extends Component {
-  constructor(props) {
-    super(props);
+const Education = () => {
+  const [eduObj, setEduObj] = useState({
+    id: uniqid(),
+    school: "",
+    degree: "",
+    from: "",
+    to: "",
+    gpa: "",
+  });
+  const [eduList, setEduList] = useState([]);
+  const [activeForm, setActiveForm] = useState(false);
+  const [activeButton, setActiveButton] = useState(true);
 
-    this.state = {
-      edu: {
-        id: uniqid(),
-        school: "",
-        degree: "",
-        from: "",
-        to: "",
-        gpa: "",
-      },
-      eduList: [],
-      activeForm: false,
-      activeButton: true,
-    };
-  }
-
-  toggleForm() {
-    this.setState({
-      activeForm: !this.state.activeForm,
-      activeButton: !this.state.activeButton,
-    });
-  }
-
-  handleFormToggle = () => {
-    this.toggleForm();
+  const toggleForm = () => {
+    setActiveForm(!activeForm);
+    setActiveButton(!activeButton);
   };
 
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const {
       target: { name, value },
     } = event;
-    this.setState({
-      edu: { ...this.state.edu, [name]: value },
-    });
+    setEduObj({ ...eduObj, [name]: value });
   };
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      eduList: [...this.state.eduList, this.state.edu],
-    });
-    this.toggleForm();
-    this.clearForm();
+    setEduList([...eduList, eduObj]);
+    clearForm();
+    toggleForm();
   };
 
-  handleDelete = (id) => {
-    const filteredArr = this.state.eduList.filter((item) => {
+  const handleDelete = (id) => {
+    const filteredArr = eduList.filter((item) => {
       return item.id !== id;
     });
 
-    this.setState({
-      eduList: filteredArr,
-    });
+    setEduList(filteredArr);
   };
 
-  clearForm = () => {
-    this.setState({
-      edu: {
-        ...this.state.edu,
-        id: uniqid(),
-        school: "",
-        degree: "",
-        from: "",
-        to: "",
-        gpa: "",
-      },
+  const clearForm = () => {
+    setEduObj({
+      id: uniqid(),
+      school: "",
+      degree: "",
+      from: "",
+      to: "",
+      gpa: "",
     });
   };
-
-  render() {
-    const { eduList, activeForm, activeButton } = this.state;
-    const { classes } = this.props;
-    const hiddenForm = activeForm ? "education-form" : classes.hidden;
-    const hiddenButton = activeButton ? classes.addItem : classes.hidden;
-
-    const displayEducation = eduList.map((item) => {
-      return (
-        <EducationDisplay
-          key={item.id}
-          data={item}
-          handleDelete={this.handleDelete}
-        />
-      );
-    });
-
+  // styling for MUI components
+  const classes = useStyles();
+  // Form and button toggle
+  const hiddenForm = activeForm ? classes.eduForm : classes.hidden;
+  const hiddenButton = activeButton ? classes.addItem : classes.hidden;
+  // display user inputs after submission
+  const displayEducation = eduList.map((item) => {
     return (
+      <EducationDisplay key={item.id} data={item} handleDelete={handleDelete} />
+    );
+  });
+
+  return (
+    <div>
+      <Typography variant="h3">Education</Typography>
+      {displayEducation}
+      <form className={hiddenForm} onSubmit={handleSubmit}>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="School"
+            name="school"
+            onChange={handleChange}
+            value={eduObj.school}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="Degree"
+            name="degree"
+            onChange={handleChange}
+            value={eduObj.degree}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="Start Date"
+            name="from"
+            onChange={handleChange}
+            value={eduObj.from}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="End Date"
+            name="to"
+            onChange={handleChange}
+            value={eduObj.to}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="GPA"
+            name="gpa"
+            onChange={handleChange}
+            value={eduObj.gpa}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <ButtonGroup>
+            <Button type="submit" variant="contained">
+              Save
+            </Button>
+            <Button variant="contained" color="secondary" onClick={toggleForm}>
+              Close
+            </Button>
+          </ButtonGroup>
+        </div>
+      </form>
       <div>
-        <Typography variant="h4" gutterBottom>
-          Education
-        </Typography>
-        {displayEducation}
-        <form className={hiddenForm} onSubmit={this.handleSubmit}>
-          <div>
-            <TextField
-              variant="outlined"
-              label="School"
-              type="text"
-              name="school"
-              value={this.state.edu.school}
-              onChange={this.handleChange}
-            ></TextField>
-          </div>
-          <div>
-            <TextField
-              variant="outlined"
-              label="Degree"
-              type="text"
-              name="degree"
-              value={this.state.edu.degree}
-              onChange={this.handleChange}
-            ></TextField>
-          </div>
-          <div>
-            <TextField
-              variant="outlined"
-              label="Start Date"
-              type="text"
-              name="from"
-              value={this.state.edu.from}
-              onChange={this.handleChange}
-            ></TextField>
-          </div>
-          <div>
-            <TextField
-              variant="outlined"
-              label="End Date"
-              type="text"
-              name="to"
-              value={this.state.edu.to}
-              onChange={this.handleChange}
-            ></TextField>
-          </div>
-          <div>
-            <TextField
-              variant="outlined"
-              label="GPA"
-              type="text"
-              name="gpa"
-              value={this.state.edu.gpa}
-              onChange={this.handleChange}
-            ></TextField>
-          </div>
-          <div>
-            <ButtonGroup>
-              <Button variant="contained" color="primary" type="submit">
-                Save
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                onClick={this.handleFormToggle}
-              >
-                Close
-              </Button>
-            </ButtonGroup>
-          </div>
-        </form>
         <Button
-          variant="contained"
-          color="primary"
           className={hiddenButton}
-          onClick={this.handleFormToggle}
+          variant="contained"
           startIcon={<AddIcon />}
+          onClick={toggleForm}
         >
           Add
         </Button>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-export default withStyles(useStyles)(Education);
+export default Education;
