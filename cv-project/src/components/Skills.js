@@ -1,150 +1,112 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import uniqid from "uniqid";
 import SkillDisplay from "./SkillDisplay";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
-import { withStyles } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 
-const useStyles = (theme) => ({
+const useStyles = makeStyles({
   hidden: {
     display: "none",
   },
 });
 
-class Skills extends Component {
-  constructor(props) {
-    super(props);
+const Skills = () => {
+  const [skillObj, setSkillObj] = useState({ id: uniqid, skillText: "" });
+  const [skillList, setSkillList] = useState([]);
+  const [activeForm, setActiveForm] = useState(false);
+  const [activeButton, setActiveButton] = useState(true);
 
-    this.state = {
-      skill: {
-        id: uniqid(),
-        skillText: "",
-      },
-      skillList: [],
-      activeForm: false,
-      activeButton: true,
-    };
-  }
-  toggleForm() {
-    this.setState({
-      activeForm: !this.state.activeForm,
-      activeButton: !this.state.activeButton,
-    });
-  }
-
-  handleAddBtn = () => {
-    this.toggleForm();
+  const toggleForm = () => {
+    setActiveForm(!activeForm);
+    setActiveButton(!activeButton);
   };
 
-  handleCloseBtn = () => {
-    this.toggleForm();
+  const clearForm = () => {
+    setSkillObj({ id: uniqid, skillText: "" });
   };
 
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const {
       target: { name, value },
     } = event;
-    this.setState({
-      skill: { ...this.state.skill, [name]: value },
-    });
+    setSkillObj({ ...skillObj, [name]: value });
   };
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      skillList: [...this.state.skillList, this.state.skill],
-    });
-    this.toggleForm();
-    this.clearForm();
+    setSkillList([...skillList, skillObj]);
+    clearForm();
+    toggleForm();
   };
 
-  handleDelete = (id) => {
-    const filteredArr = this.state.skillList.filter((item) => {
+  const handleDelete = (id) => {
+    const filteredArr = skillList.filter((item) => {
       return item.id !== id;
     });
 
-    this.setState({
-      skillList: filteredArr,
-    });
+    setSkillList(filteredArr);
   };
+  const classes = useStyles();
+  const hiddenForm = activeForm ? classes.skillItem : classes.hidden;
+  const hiddenButton = activeButton ? classes.addItem : classes.hidden;
 
-  clearForm = () => {
-    this.setState({
-      skill: {
-        ...this.state.skill,
-        id: uniqid(),
-        skillText: "",
-      },
-    });
-  };
-
-  render() {
-    const { classes } = this.props;
-    const { skillList, activeForm, activeButton } = this.state;
-
-    const hiddenForm = activeForm ? "skill-form" : "skill-form hidden";
-    const hiddenButton = activeButton ? classes.addItem : classes.hidden;
-
-    const displaySkill = skillList.map((item) => {
-      return (
-        <SkillDisplay
-          key={item.id}
-          data={item}
-          handleDelete={this.handleDelete}
-        />
-      );
-    });
-
+  const displaySkill = skillList.map((item) => {
     return (
-      <div>
-        <Typography variant="h4" gutterBottom>
-          Skills
-        </Typography>
-        {displaySkill}
-        <div>
-          <form className={hiddenForm}>
-            <input
-              type="text"
-              name="skillText"
-              value={this.state.skill.skillText}
-              onChange={this.handleChange}
-            ></input>
-            <div>
-              <ButtonGroup>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                  onClick={this.handleSubmit}
-                >
-                  Add Skill
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  type="button"
-                  onClick={this.handleCloseBtn}
-                >
-                  Close
-                </Button>
-              </ButtonGroup>
-            </div>
-          </form>
-          <Button
-            variant="contained"
-            color="primary"
-            className={hiddenButton}
-            onClick={this.handleAddBtn}
-            startIcon={<AddIcon />}
-          >
-            Add
-          </Button>
-        </div>
-      </div>
+      <SkillDisplay key={item.id} data={item} handleDelete={handleDelete} />
     );
-  }
-}
+  });
 
-export default withStyles(useStyles)(Skills);
+  return (
+    <div>
+      <Typography variant="h4" gutterBottom>
+        Skills
+      </Typography>
+      {displaySkill}
+      <div>
+        <form className={hiddenForm} onSubmit={handleSubmit}>
+          <TextField
+            type="text"
+            name="skillText"
+            value={skillObj.skillText}
+            onChange={handleChange}
+          ></TextField>
+          <div>
+            <ButtonGroup>
+              <Button
+                variant="contained"
+                color="primary"
+                type="submit"
+                startIcon={<AddIcon />}
+              >
+                Add Skill
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                type="button"
+                onClick={toggleForm}
+              >
+                Close
+              </Button>
+            </ButtonGroup>
+          </div>
+        </form>
+        <Button
+          variant="contained"
+          color="primary"
+          className={hiddenButton}
+          onClick={toggleForm}
+          startIcon={<AddIcon />}
+        >
+          Add
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+export default Skills;
