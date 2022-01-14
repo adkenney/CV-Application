@@ -1,186 +1,153 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import uniqid from "uniqid";
 import ExperienceDisplay from "./ExperienceDisplay";
 import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
+import TextField from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
-import { withStyles } from "@mui/styles";
+import { makeStyles } from "@mui/styles";
 
-const useStyles = (theme) => ({
+const useStyles = makeStyles({
   hidden: {
     display: "none",
   },
 });
 
-class Experience extends Component {
-  constructor(props) {
-    super(props);
+const Experience = () => {
+  const [expObj, setExpObj] = useState({
+    id: uniqid(),
+    company: "",
+    position: "",
+    from: "",
+    to: "",
+    description: "",
+  });
+  const [expList, setExpList] = useState([]);
+  const [activeForm, setActiveForm] = useState(false);
+  const [activeButton, setActiveButton] = useState(true);
 
-    this.state = {
-      exp: {
-        id: uniqid(),
-        company: "",
-        position: "",
-        from: "",
-        to: "",
-        description: "",
-      },
-      history: [],
-      activeForm: false,
-      activeButton: true,
-    };
-  }
+  const toggleForm = () => {
+    setActiveForm(!activeForm);
+    setActiveButton(!activeButton);
+  };
 
-  toggleForm = () => {
-    this.setState({
-      activeForm: !this.state.activeForm,
-      activeButton: !this.state.activeButton,
+  const clearForm = () => {
+    setExpObj({
+      id: uniqid(),
+      company: "",
+      position: "",
+      from: "",
+      to: "",
+      description: "",
     });
   };
 
-  clearForm = () => {
-    this.setState({
-      exp: {
-        ...this.state.exp,
-        id: uniqid(),
-        company: "",
-        position: "",
-        from: "",
-        to: "",
-        description: "",
-      },
-    });
-  };
-  handleAddBtn = () => {
-    this.toggleForm();
-  };
-  handleChange = (event) => {
+  const handleChange = (event) => {
     const {
       target: { name, value },
     } = event;
-    this.setState({
-      exp: { ...this.state.exp, [name]: value },
-    });
+
+    setExpObj({ ...expObj, [name]: value });
   };
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      history: [...this.state.history, this.state.exp],
-    });
-    this.toggleForm();
-    this.clearForm();
+    setExpList([...expList, expObj]);
+    toggleForm();
+    clearForm();
+    console.log(expList);
   };
-  handleDelete = (id) => {
-    const filteredArr = this.state.history.filter((item) => {
+
+  const handleDelete = (id) => {
+    const filteredArr = expList.filter((item) => {
       return item.id !== id;
     });
 
-    this.setState({
-      history: filteredArr,
-    });
+    setExpList(filteredArr);
   };
 
-  render() {
-    const { classes } = this.props;
-    const { activeForm, activeButton } = this.state;
+  const classes = useStyles();
+  const hiddenForm = activeForm ? classes.expForm : classes.hidden;
+  const hiddenButton = activeButton ? classes.addItem : classes.hidden;
 
-    const hiddenForm = activeForm
-      ? "experience-form"
-      : "experience-form hidden";
-    const hiddenButton = activeButton ? classes.addItem : classes.hidden;
-
-    const displayExp = this.state.history.map((item) => {
-      return (
-        <ExperienceDisplay
-          key={item.id}
-          data={item}
-          handleDelete={this.handleDelete}
-        />
-      );
-    });
-
+  const displayExp = expList.map((item) => {
     return (
-      <div>
-        <Typography variant="h4" gutterBottom>
-          Professional Experience
-        </Typography>
-        {displayExp}
-        <form className={hiddenForm} onSubmit={this.handleSubmit}>
-          <div>
-            <label htmlFor="company">Company Name</label>
-            <input
-              type="text"
-              name="company"
-              value={this.state.exp.company}
-              onChange={this.handleChange}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="position">Position</label>
-            <input
-              type="text"
-              name="position"
-              value={this.state.exp.position}
-              onChange={this.handleChange}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="from">From</label>
-            <input
-              type="text"
-              name="from"
-              value={this.state.exp.from}
-              onChange={this.handleChange}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="to">To</label>
-            <input
-              type="text"
-              name="to"
-              value={this.state.exp.to}
-              onChange={this.handleChange}
-            ></input>
-          </div>
-          <div>
-            <label htmlFor="description">Description</label>
-            <textarea
-              type="text"
-              name="description"
-              value={this.state.exp.description}
-              onChange={this.handleChange}
-            ></textarea>
-          </div>
-          <div>
-            <ButtonGroup>
-              <Button variant="contained" color="primary" type="submit">
-                Save
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                type="button"
-                onClick={this.toggleForm}
-              >
-                Close
-              </Button>
-            </ButtonGroup>
-          </div>
-        </form>
-        <Button
-          variant="contained"
-          color="primary"
-          className={hiddenButton}
-          onClick={this.handleAddBtn}
-          startIcon={<AddIcon />}
-        >
-          Add
-        </Button>
-      </div>
+      <ExperienceDisplay
+        key={item.id}
+        data={item}
+        handleDelete={handleDelete}
+      />
     );
-  }
-}
+  });
 
-export default withStyles(useStyles)(Experience);
+  return (
+    <div>
+      <Typography variant="h3"> Professional Experience</Typography>
+      {displayExp}
+      <form className={hiddenForm} onSubmit={handleSubmit}>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="Company"
+            name="company"
+            value={expObj.company}
+            onChange={handleChange}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="Position"
+            name="position"
+            value={expObj.position}
+            onChange={handleChange}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="Start Date"
+            name="to"
+            value={expObj.to}
+            onChange={handleChange}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            label="End Date"
+            name="from"
+            value={expObj.from}
+            onChange={handleChange}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <TextField
+            multiline
+            label="Description"
+            name="description"
+            value={expObj.description}
+            onChange={handleChange}
+          ></TextField>
+        </div>
+        <div style={{ padding: 5 }}>
+          <ButtonGroup>
+            <Button type="submit" variant="contained">
+              Save
+            </Button>
+            <Button variant="contained" color="secondary" onClick={toggleForm}>
+              Close
+            </Button>
+          </ButtonGroup>
+        </div>
+      </form>
+      <Button
+        className={hiddenButton}
+        variant="contained"
+        startIcon={<AddIcon />}
+        onClick={toggleForm}
+      >
+        Add
+      </Button>
+    </div>
+  );
+};
+
+export default Experience;
