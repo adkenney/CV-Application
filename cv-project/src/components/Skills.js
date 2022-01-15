@@ -69,12 +69,13 @@ const Skills = () => {
       <div>
         <form className={hiddenForm} onSubmit={handleSubmit}>
           <TextField
+            label="Skill (ex: Javascript)"
             type="text"
             name="skillText"
             value={skillObj.skillText}
             onChange={handleChange}
           ></TextField>
-          <div>
+          <div style={{ padding: 5 }}>
             <ButtonGroup>
               <Button
                 variant="contained"

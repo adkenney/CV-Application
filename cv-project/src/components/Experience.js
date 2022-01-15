@@ -83,7 +83,9 @@ const Experience = () => {
 
   return (
     <div>
-      <Typography variant="h3"> Professional Experience</Typography>
+      <Typography variant="h3" gutterBottom>
+        Professional Experience
+      </Typography>
       {displayExp}
       <form className={hiddenForm} onSubmit={handleSubmit}>
         <div style={{ padding: 5 }}>

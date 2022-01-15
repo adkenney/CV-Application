@@ -78,7 +78,9 @@ const Education = () => {
 
   return (
     <div>
-      <Typography variant="h3">Education</Typography>
+      <Typography variant="h3" gutterBottom>
+        Education
+      </Typography>
       {displayEducation}
       <form className={hiddenForm} onSubmit={handleSubmit}>
         <div style={{ padding: 5 }}>
