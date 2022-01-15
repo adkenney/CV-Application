@@ -1,71 +1,50 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import InputBase from "@mui/material/InputBase";
 
-class EditableLabel extends Component {
-  constructor(props) {
-    super(props);
+const EditableLabel = (props) => {
+  const [text, setText] = useState(props.value);
+  const [defaultText] = useState(props.value);
+  const [isEditing, setIsEditing] = useState(false);
 
-    this.state = {
-      text: props.value,
-      tag: props.tag,
-      default: props.value,
-      isEditing: false,
-    };
-  }
-
-  handleClick = () => {
-    this.setState({
-      text: this.state.text,
-      isEditing: true,
-    });
+  const handleClick = () => {
+    setText(text);
+    setIsEditing(true);
   };
 
-  handleChange = (event) => {
-    this.setState({
-      text: event.target.value,
-    });
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
+  const save = () => {
+    setText(text);
+    setIsEditing(false);
+
+    if (text === "") {
+      setText(defaultText);
+    }
   };
 
-  handleBlur = () => {
-    this.save();
+  const handleBlur = () => {
+    save();
   };
 
-  enterKeyPress = (event) => {
+  const handleEnterKey = (event) => {
     if (event.keyCode === 13) {
-      this.save();
+      save();
     }
   };
-
-  save = () => {
-    this.setState({
-      text: this.state.text,
-      isEditing: false,
-    });
-
-    if (this.state.text === "") {
-      this.setState({
-        text: this.state.default,
-      });
-    }
-  };
-
-  render() {
-    return this.state.isEditing ? (
-      <InputBase
-        variant="standard"
-        type="text"
-        value={this.state.text}
-        autoFocus={true}
-        onKeyDown={this.enterKeyPress}
-        onBlur={this.handleBlur}
-        onChange={this.handleChange}
-      ></InputBase>
-    ) : (
-      <this.state.tag onClick={this.handleClick}>
-        {this.state.text}
-      </this.state.tag>
-    );
-  }
-}
+  return isEditing ? (
+    <InputBase
+      variant="standard"
+      type="text"
+      value={text}
+      autoFocus={true}
+      onKeyDown={handleEnterKey}
+      onBlur={handleBlur}
+      onChange={handleChange}
+    ></InputBase>
+  ) : (
+    <h4 onClick={handleClick}>{text}</h4>
+  );
+};
 
 export default EditableLabel;

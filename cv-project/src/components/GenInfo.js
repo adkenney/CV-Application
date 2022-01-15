@@ -5,9 +5,9 @@ const GenInfo = () => {
   return (
     <div>
       <div>
-        <EditableLabel value="Full Name" tag="h1" />
-        <EditableLabel value="Phone Number" tag="h3" />
-        <EditableLabel value="E-mail" tag="h4" />
+        <EditableLabel value="Full Name" />
+        <EditableLabel value="Phone Number" />
+        <EditableLabel value="E-mail" />
       </div>
     </div>
   );
