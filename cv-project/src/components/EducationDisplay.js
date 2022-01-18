@@ -1,34 +1,39 @@
-import React, { Component } from "react";
+import React from "react";
 import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import useStyles from "../styles/styles";
 
-class EducationDisplay extends Component {
-  render() {
-    return (
-      <div>
-        <Container>
-          <div>
-            <h5>{this.props.data.school}</h5>
-            <p>
-              {this.props.data.from} - {this.props.data.to}
-            </p>
-          </div>
-          <div>
-            <h5>{this.props.data.degree}</h5>
-            <p>{this.props.data.gpa}</p>
-          </div>
-          <div>
-            <i
-              onClick={() => {
-                this.props.handleDelete(this.props.data.id);
-              }}
-            >
-              Delete
-            </i>
-          </div>
-        </Container>
-      </div>
-    );
-  }
-}
+const EducationDisplay = (props) => {
+  const classes = useStyles();
+  return (
+    <Container>
+      <Grid container rowSpacing={1} alignItems="center">
+        <Grid className={classes.boldHeader} item xs={6}>
+          {props.data.from} - {props.data.to}
+        </Grid>
+        <Grid className={classes.boldHeader} item textAlign="right" xs={6}>
+          {props.data.school}
+        </Grid>
+        <Grid item textAlign="right" xs={12}>
+          {props.data.degree}
+        </Grid>
+        <Grid item textAlign="right" xs={12}>
+          GPA: {props.data.gpa}
+        </Grid>
+        <Grid item textAlign="right" xs={12}>
+          {" "}
+          <RemoveCircleOutlineIcon
+            fontSize="small"
+            color="secondary"
+            onClick={() => {
+              props.handleDelete(props.data.id);
+            }}
+          ></RemoveCircleOutlineIcon>
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
 
 export default EducationDisplay;

@@ -2,7 +2,7 @@ import CV from "./components/CV";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <CV />
     </div>
   );

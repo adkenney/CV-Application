@@ -6,13 +6,9 @@ import Button from "@mui/material/Button";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import AddIcon from "@mui/icons-material/Add";
 import TextField from "@mui/material/TextField";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles({
-  hidden: {
-    display: "none",
-  },
-});
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import useStyles from "../styles/styles";
 
 const Education = () => {
   const [eduObj, setEduObj] = useState({
@@ -77,64 +73,86 @@ const Education = () => {
   });
 
   return (
-    <div>
-      <Typography variant="h3" gutterBottom>
-        Education
-      </Typography>
-      {displayEducation}
-      <form className={hiddenForm} onSubmit={handleSubmit}>
-        <div style={{ padding: 5 }}>
-          <TextField
-            label="School"
-            name="school"
-            onChange={handleChange}
-            value={eduObj.school}
-          ></TextField>
-        </div>
-        <div style={{ padding: 5 }}>
-          <TextField
-            label="Degree"
-            name="degree"
-            onChange={handleChange}
-            value={eduObj.degree}
-          ></TextField>
-        </div>
-        <div style={{ padding: 5 }}>
-          <TextField
-            label="Start Date"
-            name="from"
-            onChange={handleChange}
-            value={eduObj.from}
-          ></TextField>
-        </div>
-        <div style={{ padding: 5 }}>
-          <TextField
-            label="End Date"
-            name="to"
-            onChange={handleChange}
-            value={eduObj.to}
-          ></TextField>
-        </div>
-        <div style={{ padding: 5 }}>
-          <TextField
-            label="GPA"
-            name="gpa"
-            onChange={handleChange}
-            value={eduObj.gpa}
-          ></TextField>
-        </div>
-        <div style={{ padding: 5 }}>
-          <ButtonGroup>
-            <Button type="submit" variant="contained">
-              Save
-            </Button>
-            <Button variant="contained" color="secondary" onClick={toggleForm}>
-              Close
-            </Button>
-          </ButtonGroup>
-        </div>
-      </form>
-      <div>
+    <Container className={classes.sectionContainer}>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+        maxWidth="sm"
+        spacing={0}
+      >
+        <Typography variant="h4" className={classes.mainHeader} gutterBottom>
+          Education
+        </Typography>
+        {displayEducation}
+        <form className={hiddenForm} onSubmit={handleSubmit}>
+          <Grid item>
+            <TextField
+              className={classes.formTextField}
+              size="small"
+              label="School"
+              name="school"
+              onChange={handleChange}
+              value={eduObj.school}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              className={classes.formTextField}
+              size="small"
+              label="Degree"
+              name="degree"
+              onChange={handleChange}
+              value={eduObj.degree}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              className={classes.formTextField}
+              size="small"
+              label="Start Date"
+              name="from"
+              onChange={handleChange}
+              value={eduObj.from}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              className={classes.formTextField}
+              size="small"
+              label="End Date"
+              name="to"
+              onChange={handleChange}
+              value={eduObj.to}
+            ></TextField>
+          </Grid>
+          <Grid item>
+            <TextField
+              className={classes.formTextField}
+              size="small"
+              label="GPA"
+              name="gpa"
+              onChange={handleChange}
+              value={eduObj.gpa}
+            ></TextField>
+          </Grid>
+          <Grid container item justifyContent="center">
+            <ButtonGroup>
+              <Button type="submit" variant="contained">
+                Save
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={toggleForm}
+              >
+                Close
+              </Button>
+            </ButtonGroup>
+          </Grid>
+        </form>
+
         <Button
           className={hiddenButton}
           variant="contained"
@@ -143,8 +161,8 @@ const Education = () => {
         >
           Add
         </Button>
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

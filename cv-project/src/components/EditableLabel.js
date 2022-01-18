@@ -34,6 +34,8 @@ const EditableLabel = (props) => {
   };
   return isEditing ? (
     <InputBase
+      sx={{ textAlign: "center" }}
+      size="small"
       variant="standard"
       type="text"
       value={text}
@@ -43,7 +45,9 @@ const EditableLabel = (props) => {
       onChange={handleChange}
     ></InputBase>
   ) : (
-    <h4 onClick={handleClick}>{text}</h4>
+    <p style={{ margin: 0 }} onClick={handleClick}>
+      {text}
+    </p>
   );
 };
 

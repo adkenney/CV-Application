@@ -6,13 +6,9 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import AddIcon from "@mui/icons-material/Add";
-import { makeStyles } from "@mui/styles";
-
-const useStyles = makeStyles({
-  hidden: {
-    display: "none",
-  },
-});
+import Container from "@mui/material/Container";
+import Grid from "@mui/material/Grid";
+import useStyles from "../styles/styles";
 
 const Skills = () => {
   const [skillObj, setSkillObj] = useState({ id: uniqid, skillText: "" });
@@ -26,7 +22,7 @@ const Skills = () => {
   };
 
   const clearForm = () => {
-    setSkillObj({ id: uniqid, skillText: "" });
+    setSkillObj({ id: uniqid(), skillText: "" });
   };
 
   const handleChange = (event) => {
@@ -61,21 +57,30 @@ const Skills = () => {
   });
 
   return (
-    <div>
-      <Typography variant="h4" gutterBottom>
-        Skills
-      </Typography>
-      {displaySkill}
-      <div>
+    <Container className={classes.sectionContainer}>
+      <Grid
+        container
+        direction="column"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Typography className={classes.mainHeader} variant="h4" gutterBottom>
+          Skills
+        </Typography>
+        {displaySkill}
         <form className={hiddenForm} onSubmit={handleSubmit}>
-          <TextField
-            label="Skill (ex: Javascript)"
-            type="text"
-            name="skillText"
-            value={skillObj.skillText}
-            onChange={handleChange}
-          ></TextField>
-          <div style={{ padding: 5 }}>
+          <Grid item>
+            <TextField
+              className={classes.formTextField}
+              size="small"
+              label="Skill (ex: Javascript)"
+              type="text"
+              name="skillText"
+              value={skillObj.skillText}
+              onChange={handleChange}
+            ></TextField>
+          </Grid>
+          <Grid container item justifyContent="center">
             <ButtonGroup>
               <Button
                 variant="contained"
@@ -94,7 +99,7 @@ const Skills = () => {
                 Close
               </Button>
             </ButtonGroup>
-          </div>
+          </Grid>
         </form>
         <Button
           variant="contained"
@@ -105,8 +110,8 @@ const Skills = () => {
         >
           Add
         </Button>
-      </div>
-    </div>
+      </Grid>
+    </Container>
   );
 };
 

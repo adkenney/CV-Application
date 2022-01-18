@@ -1,22 +1,29 @@
-import React, { Component } from "react";
+import React from "react";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import useStyles from "../styles/styles";
 
-class SkillDisplay extends Component {
-  render() {
-    return (
-      <div>
-        <h5>
-          {this.props.data.skillText}
-          <button
+const SkillDisplay = (props) => {
+  const classes = useStyles();
+  return (
+    <Container>
+      <Button
+        variant="contained"
+        endIcon={
+          <RemoveCircleOutlineIcon
+            fontSize="small"
+            color="secondary"
             onClick={() => {
-              this.props.handleDelete(this.props.data.id);
+              props.handleDelete(props.data.id);
             }}
-          >
-            x
-          </button>
-        </h5>
-      </div>
-    );
-  }
-}
+          />
+        }
+      >
+        {props.data.skillText}
+      </Button>
+    </Container>
+  );
+};
 
 export default SkillDisplay;
