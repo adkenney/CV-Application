@@ -12,7 +12,12 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 const CV = () => {
   return (
     <Container>
-      <Typography variant="h2" align="center" gutterBottom>
+      <Typography
+        sx={{ fontWeight: "bold" }}
+        variant="h2"
+        align="center"
+        gutterBottom
+      >
         CV Builder
         <a
           rel="noreferrer"
